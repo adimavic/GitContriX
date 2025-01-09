@@ -1,20 +1,66 @@
-name: Daily Contributions
+name: Random Daily Contributions
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/5 * * * *' # Run daily at midnight
+  workflow_dispatch: # Allow manual trigger for testing
+
 jobs:
-  update-readme:
+  random-contributions:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Update Content
+      - name: Generate Random Job Count
+        id: random-count
+        run: echo "JOB_COUNT=$((RANDOM % 10 + 1))" >> $GITHUB_ENV
+
+      - name: Execute Random Jobs
         run: |
-          echo "Last updated: $(date)" > README.md
+          for ((i=1; i<=$JOB_COUNT; i++)); do
+            case $((i % 10 + 1)) in
+              1)
+                echo "Random Quote: '$(curl -s https://api.quotable.io/random | jq -r '.content')'" >> README.md
+                ;;
+              2)
+                curl -s https://artii.herokuapp.com/make?text=GitHub > ascii_art_$i.txt
+                ;;
+              3)
+                echo "Log entry $i: $(date)" >> log.txt
+                ;;
+              4)
+                progress=$((RANDOM % 100))
+                echo "Today's progress ($i): $progress%" >> progress_$i.txt
+                ;;
+              5)
+                filename="file_$(date +'%H%M%S')_$i.txt"
+                echo "Random Content for $filename" > $filename
+                ;;
+              6)
+                joke=$(curl -s https://official-joke-api.appspot.com/random_joke | jq -r '.setup + " - " + .punchline')
+                echo "Random Joke $i: $joke" >> jokes.txt
+                ;;
+              7)
+                echo "ASCII Art $i" >> ascii_art_summary.txt
+                curl -s https://artii.herokuapp.com/make?text=Commit$i >> ascii_art_summary.txt
+                ;;
+              8)
+                echo "Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> facts.txt
+                ;;
+              9)
+                echo "Simulated task $i at $(date)" > "task_$i.txt"
+                ;;
+              10)
+                echo "Placeholder file $i created on $(date)" > placeholder_$i.txt
+                ;;
+            esac
+          done
+
+      - name: Commit Changes
+        run: |
           git config user.name "Aditya Kale"
           git config user.email "adityakale732@gmail.com"
-          git add README.md
-          git commit -m "Update README at $(date)"
+          git add .
+          git commit -m "Triggered $JOB_COUNT random jobs on $(date)" || echo "No changes to commit"
           git push
