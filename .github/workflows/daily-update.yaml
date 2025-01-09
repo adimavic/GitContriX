@@ -13,8 +13,8 @@ jobs:
       - name: Update Content
         run: |
           echo "Last updated: $(date)" > README.md
-          git config user.name "your-username"
-          git config user.email "your-email@example.com"
+          git config user.name "Aditya Kale"
+          git config user.email "adityakale732@gmail.com"
           git add README.md
           git commit -m "Update README at $(date)"
           git push
