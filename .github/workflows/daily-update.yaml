@@ -28,14 +28,14 @@ jobs:
                 echo "Random Quote: '$(curl -s https://api.quotable.io/random | jq -r '.content')" >> boiling/README.md
                 ;;
               2)
-                curl -s https://artii.herokuapp.com/make?text=GitHub > boiling/ascii_art_$i.txt
+                curl -s https://artii.herokuapp.com/make?text=GitHub > boiling/ascii_art_$(date +'%H%M%S')_$i.txt
                 ;;
               3)
-                echo "Log entry $i: $(date)" >> boiling/log.txt
+                echo "Log entry $i: $(date)" >> boiling/log_$i.txt
                 ;;
               4)
                 progress=$((RANDOM % 100))
-                echo "Today's progress ($i): $progress%" >> boiling/progress_$i.txt
+                echo "Today's progress ($i): $progress%" >> boiling/progress_$(date +'%H%M%S')_$i.txt
                 ;;
               5)
                 filename="boiling/file_$(date +'%H%M%S')_$i.txt"
@@ -43,20 +43,20 @@ jobs:
                 ;;
               6)
                 joke=$(curl -s https://official-joke-api.appspot.com/random_joke | jq -r '.setup + " - " + .punchline')
-                echo "Random Joke $i: $joke" >> boiling/jokes.txt
+                echo "Random Joke $i: $joke" >> boiling/jokes_$(date +'%H%M%S')_$i.txt
                 ;;
               7)
                 echo "ASCII Art $i" >> boiling/ascii_art_summary.txt
-                curl -s https://artii.herokuapp.com/make?text=Commit$i >> boiling/ascii_art_summary.txt
+                curl -s https://artii.herokuapp.com/make?text=Commit$i >> boiling/ascii_art_summary_$(date +'%H%M%S')_$i.txt
                 ;;
               8)
-                echo "Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> boiling/facts.txt
+                echo "Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> boiling/facts_$(date +'%H%M%S')_$i.txt
                 ;;
               9)
-                echo "Simulated task $i at $(date)" > boiling/task_$i.txt
+                echo "Simulated task $i at $(date)" > boiling/task_$(date +'%H%M%S')_$i.txt
                 ;;
               10)
-                echo "Placeholder file $i created on $(date)" > boiling/placeholder_$i.txt
+                echo "Placeholder file $i created on $(date)" > boiling/placeholder_$(date +'%H%M%S')_$i.txt
                 ;;
             esac
           done
