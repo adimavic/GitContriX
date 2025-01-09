@@ -1,1 +1,2 @@
 Random Quote: '
+Random Quote: '
