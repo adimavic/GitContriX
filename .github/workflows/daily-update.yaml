@@ -1,8 +1,8 @@
-name: Random Contributions Every 5 Minutes
+name: Daily Contributions 
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # Run every 5 minutes
+    - cron: '0 0 * * *' # Run daily at midnight
   workflow_dispatch: # Allow manual trigger for testing
 
 jobs:
