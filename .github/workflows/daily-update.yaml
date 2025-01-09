@@ -1,8 +1,8 @@
-name: Random Daily Contributions
+name: Random Contributions Every 5 Minutes
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # Run daily at midnight
+    - cron: '*/5 * * * *' # Run every 5 minutes
   workflow_dispatch: # Allow manual trigger for testing
 
 jobs:
@@ -11,6 +11,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+
+      - name: Create boiling directory
+        run: |
+          mkdir -p boiling
 
       - name: Generate Random Job Count
         id: random-count
@@ -21,38 +25,38 @@ jobs:
           for ((i=1; i<=$JOB_COUNT; i++)); do
             case $((i % 10 + 1)) in
               1)
-                echo "Random Quote: '$(curl -s https://api.quotable.io/random | jq -r '.content')'" >> README.md
+                echo "Random Quote: '$(curl -s https://api.quotable.io/random | jq -r '.content')" >> boiling/README.md
                 ;;
               2)
-                curl -s https://artii.herokuapp.com/make?text=GitHub > ascii_art_$i.txt
+                curl -s https://artii.herokuapp.com/make?text=GitHub > boiling/ascii_art_$i.txt
                 ;;
               3)
-                echo "Log entry $i: $(date)" >> log.txt
+                echo "Log entry $i: $(date)" >> boiling/log.txt
                 ;;
               4)
                 progress=$((RANDOM % 100))
-                echo "Today's progress ($i): $progress%" >> progress_$i.txt
+                echo "Today's progress ($i): $progress%" >> boiling/progress_$i.txt
                 ;;
               5)
-                filename="file_$(date +'%H%M%S')_$i.txt"
+                filename="boiling/file_$(date +'%H%M%S')_$i.txt"
                 echo "Random Content for $filename" > $filename
                 ;;
               6)
                 joke=$(curl -s https://official-joke-api.appspot.com/random_joke | jq -r '.setup + " - " + .punchline')
-                echo "Random Joke $i: $joke" >> jokes.txt
+                echo "Random Joke $i: $joke" >> boiling/jokes.txt
                 ;;
               7)
-                echo "ASCII Art $i" >> ascii_art_summary.txt
-                curl -s https://artii.herokuapp.com/make?text=Commit$i >> ascii_art_summary.txt
+                echo "ASCII Art $i" >> boiling/ascii_art_summary.txt
+                curl -s https://artii.herokuapp.com/make?text=Commit$i >> boiling/ascii_art_summary.txt
                 ;;
               8)
-                echo "Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> facts.txt
+                echo "Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> boiling/facts.txt
                 ;;
               9)
-                echo "Simulated task $i at $(date)" > "task_$i.txt"
+                echo "Simulated task $i at $(date)" > boiling/task_$i.txt
                 ;;
               10)
-                echo "Placeholder file $i created on $(date)" > placeholder_$i.txt
+                echo "Placeholder file $i created on $(date)" > boiling/placeholder_$i.txt
                 ;;
             esac
           done
@@ -61,6 +65,6 @@ jobs:
         run: |
           git config user.name "Aditya Kale"
           git config user.email "adityakale732@gmail.com"
-          git add .
+          git add boiling/*
           git commit -m "Triggered $JOB_COUNT random jobs on $(date)" || echo "No changes to commit"
           git push
