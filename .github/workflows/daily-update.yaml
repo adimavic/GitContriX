@@ -39,7 +39,7 @@ jobs:
                 echo "$current_date - Today's progress ($i): $progress%" >> boiling/progress.txt
                 ;;
               5)
-                filename="boiling/file_$i.txt"
+                filename="boiling/file.txt"
                 echo "$current_date - Random Content for $filename" > $filename
                 ;;
               6)
@@ -54,10 +54,10 @@ jobs:
                 echo "$current_date - Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> boiling/facts.txt
                 ;;
               9)
-                echo "$current_date - Simulated task $i" > boiling/task_$i.txt
+                echo "$current_date - Simulated task $i" > boiling/task.txt
                 ;;
               10)
-                echo "$current_date - Placeholder file $i created" > boiling/placeholder_$i.txt
+                echo "$current_date - Placeholder file $i created" > boiling/placeholder.txt
                 ;;
             esac
           
@@ -69,7 +69,7 @@ jobs:
               git commit -m "Job $i completed on $current_date"
               git push
             else
-              echo "No changes to commit for Job $i."
+              echo "No changes to commit for Job $JOB_COUNT."
             fi
           done
 
