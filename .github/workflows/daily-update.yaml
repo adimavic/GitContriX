@@ -1,4 +1,4 @@
-name: Daily Contributions 
+name: Daily Contributions
 
 on:
   schedule:
@@ -12,17 +12,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Create boiling directory
-        run: |
-          mkdir -p boiling
+      - name: Create Boiling Directory
+        run: mkdir -p boiling
 
       - name: Generate Random Job Count
         id: random-count
         run: echo "JOB_COUNT=$((RANDOM % 10 + 1))" >> $GITHUB_ENV
 
-      - name: Execute Random Jobs
+      - name: Execute and Commit Random Jobs
         run: |
           for ((i=1; i<=$JOB_COUNT; i++)); do
+            # Generate file or perform action based on the random task
             case $((i % 10 + 1)) in
               1)
                 echo "Random Quote: '$(curl -s https://api.quotable.io/random | jq -r '.content')" >> boiling/README.md
@@ -59,12 +59,11 @@ jobs:
                 echo "Placeholder file $i created on $(date)" > boiling/placeholder_$(date +'%H%M%S')_$i.txt
                 ;;
             esac
+            
+            # Commit changes after each task
+            git config user.name "Aditya Kale"
+            git config user.email "adityakale732@gmail.com"
+            git add boiling/*
+            git commit -m "Job $i completed on $(date +'%Y-%m-%d %H:%M:%S')"
+            git push
           done
-
-      - name: Commit Changes
-        run: |
-          git config user.name "Aditya Kale"
-          git config user.email "adityakale732@gmail.com"
-          git add boiling/*
-          git commit -m "Triggered $JOB_COUNT random jobs on $(date)" || echo "No changes to commit"
-          git push
