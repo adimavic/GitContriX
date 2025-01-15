@@ -22,48 +22,54 @@ jobs:
       - name: Execute and Commit Random Jobs
         run: |
           for ((i=1; i<=$JOB_COUNT; i++)); do
-            # Generate file or perform action based on the random task
+            current_date=$(date +'%Y-%m-%d %H:%M:%S')
             case $((i % 10 + 1)) in
               1)
-                echo "Random Quote: '$(curl -s https://api.quotable.io/random | jq -r '.content')" >> boiling/README.md
+                echo "$current_date - Random Quote: '$(curl -s https://api.quotable.io/random | jq -r '.content')" >> boiling/README.md
                 ;;
               2)
-                curl -s https://artii.herokuapp.com/make?text=GitHub > boiling/ascii_art.txt
+                echo "$current_date - ASCII Art:" > boiling/ascii_art.txt
+                curl -s https://artii.herokuapp.com/make?text=GitHub >> boiling/ascii_art.txt
                 ;;
               3)
-                echo "Log entry $i: $(date)" >> boiling/log.txt
+                echo "$current_date - Log entry $i" >> boiling/log.txt
                 ;;
               4)
                 progress=$((RANDOM % 100))
-                echo "Today's progress ($i): $progress%" >> boiling/progress.txt
+                echo "$current_date - Today's progress ($i): $progress%" >> boiling/progress.txt
                 ;;
               5)
-                filename="boiling/file.txt"
-                echo "Random Content for $filename" > $filename
+                filename="boiling/file_$i.txt"
+                echo "$current_date - Random Content for $filename" > $filename
                 ;;
               6)
                 joke=$(curl -s https://official-joke-api.appspot.com/random_joke | jq -r '.setup + " - " + .punchline')
-                echo "Random Joke $i: $joke" >> boiling/jokes.txt
+                echo "$current_date - Random Joke $i: $joke" >> boiling/jokes.txt
                 ;;
               7)
-                echo "ASCII Art $i" >> boiling/ascii_art_summary.txt
+                echo "$current_date - ASCII Art $i" >> boiling/ascii_art_summary.txt
                 curl -s https://artii.herokuapp.com/make?text=Commit$i >> boiling/ascii_art_summary.txt
                 ;;
               8)
-                echo "Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> boiling/facts.txt
+                echo "$current_date - Random fact $i: $(curl -s https://uselessfacts.jsph.pl/random.json?language=en | jq -r '.text')" >> boiling/facts.txt
                 ;;
               9)
-                echo "Simulated task $i at $(date)" > boiling/task.txt
+                echo "$current_date - Simulated task $i" > boiling/task_$i.txt
                 ;;
               10)
-                echo "Placeholder file $i created on $(date)" > boiling/placeholder.txt
+                echo "$current_date - Placeholder file $i created" > boiling/placeholder_$i.txt
                 ;;
             esac
-            
-            # Commit changes after each task
+          
+            # Commit changes if there are any
             git config user.name "Aditya Kale"
             git config user.email "adityakale732@gmail.com"
             git add boiling/*
-            git commit -m "Job $i completed on $(date +'%Y-%m-%d %H:%M:%S')"
-            git push
+            if ! git diff --cached --quiet; then
+              git commit -m "Job $i completed on $current_date"
+              git push
+            else
+              echo "No changes to commit for Job $i."
+            fi
           done
+
