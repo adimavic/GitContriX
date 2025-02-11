@@ -2,7 +2,7 @@ name: Daily Contributions
 
 on:
   schedule:
-    - cron: '0 0 * * 1-5' # Run Monday through Friday at midnight
+    - - cron: '0 0 * * 1,4' #
   workflow_dispatch: # Allow manual trigger for testing
 
 jobs:
