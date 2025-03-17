@@ -20,3 +20,4 @@
 2025-03-11 11:34:19 - Random Joke 5: What happens to a frog's car when it breaks down? - It gets toad away
 2025-03-12 01:46:18 - Random Joke 5: Why did the Clydesdale give the pony a glass of water? - Because he was a little horse
 2025-03-13 01:48:06 - Random Joke 5: How many bones are in the human hand? - A handful of them.
+2025-03-17 01:50:54 - Random Joke 5: How do you check if a webpage is HTML5? - Try it out on Internet Explorer
